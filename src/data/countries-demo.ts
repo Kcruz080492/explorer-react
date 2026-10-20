@@ -59,3 +59,9 @@ export const japon: Country = {
   "population": 122650000,
   "region": "Asia"
 };
+
+export const countriesDemo: Country[] = [
+  elSalvador,
+  japon,
+  canada,
+];
