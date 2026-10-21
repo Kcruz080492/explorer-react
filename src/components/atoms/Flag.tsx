@@ -21,7 +21,7 @@ export function Flag({ src, alt }: FlagProps): JSX.Element {
 
   return (
     <img
-      className="aspect-3/2 w-full shrink-0 object-cover @min-[20rem]:aspect-auto @min-[20rem]:w-2/5"
+      className="w-2/5 shrink-0 self-stretch object-cover @min-[20rem]:h-[218px] @min-[20rem]:w-full"
       src={flagUrl}
       alt={alt}
       loading="lazy"
