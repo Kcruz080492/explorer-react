@@ -13,7 +13,7 @@ Esta versión inicia la migración del proyecto Vanilla TypeScript a React media
 - pnpm.
 - Git y GitHub.
 
-## Avance de la S21
+## Avance actual: S26 en Canvas / S22 de la programación
 
 La aplicación muestra tres países de ejemplo:
 
@@ -23,7 +23,18 @@ La aplicación muestra tres países de ejemplo:
 
 Cada tarjeta presenta bandera, nombre, población, región y capital.
 
-El componente `CountryCard` se reutiliza con diferentes objetos de tipo `Country`. Las tarjetas incorporan diseño adaptable mediante Container Queries, efecto hover y estilos para modo oscuro según la preferencia del sistema.
+`App` compone `Header` y `CountryGrid`. El grid recibe `Country[]`, crea las tarjetas con `map()` y utiliza `codes.alpha_2` como `key` estable. `CountryCard` combina `Flag` y `Badge`, y comunica la selección mediante una función prop tipada.
+
+### Diseño de las tarjetas
+
+- Menos de 20rem de ancho de tarjeta: bandera a la izquierda (2/5) e información a la derecha (3/5).
+- Desde 20rem: bandera arriba, a todo el ancho y con 218px de alto; información debajo.
+- El umbral pertenece a la tarjeta mediante `@container`, no al ancho de pantalla.
+- Se conservan los tokens de color, la superficie blanca, la región como texto y el control naranja “Ver más”.
+- El grid utiliza una, dos, tres o cuatro columnas según el breakpoint; desde `xl` utiliza cuatro.
+- Los tres registros son una comprobación temporal. Con cuatro columnas queda una posición libre.
+
+“Ver más” comprueba actualmente el callback mostrando el código en consola; la navegación al detalle se integrará con React Router. No se incorpora un interruptor de tema.
 
 ## Requisitos
 
@@ -81,8 +92,12 @@ pnpm preview
 | Archivo | Responsabilidad |
 | --- | --- |
 | `src/main.tsx` | Monta la aplicación React e importa los estilos globales. |
-| `src/App.tsx` | Organiza la pantalla y proporciona los países a las tarjetas. |
-| `src/components/CountryCard.tsx` | Representa un país mediante un componente con props tipadas. |
+| `src/App.tsx` | Compone Header y CountryGrid; proporciona los países y la función de selección. |
+| `src/components/atoms/Flag.tsx` | Muestra la bandera y su respaldo. |
+| `src/components/atoms/Badge.tsx` | Muestra la región como texto. |
+| `src/components/molecules/CountryCard.tsx` | Compone la información de un país y su acción. |
+| `src/components/organisms/CountryGrid.tsx` | Renderiza la colección recibida con claves estables. |
+| `src/components/organisms/Header.tsx` | Compone el título y contenido recibido mediante children. |
 | `src/data/countries-demo.ts` | Contiene los tres países utilizados en esta práctica. |
 | `src/types/country.ts` | Define las interfaces de los datos de países. |
 | `src/utils/format.ts` | Formatea la población y obtiene la capital y la descripción de la bandera. |
@@ -103,9 +118,9 @@ Las banderas utilizan direcciones externas. Si una imagen falla, el componente i
 
 ## Alcance actual
 
-La S25 se concentra en configurar el proyecto, utilizar JSX y crear el primer componente reutilizable.
+La S25 de Canvas / S21 de la programación configuró el proyecto y creó el primer componente. La S26 de Canvas / S22 de la programación organiza componentes y su composición.
 
-La búsqueda reactiva, los filtros, la carga de datos con `useEffect` y la navegación al detalle se incorporarán en las siguientes etapas.
+La búsqueda reactiva y los filtros se incorporarán al trabajar estado y formularios. La conexión de `api/countries.ts` con `public/data/countries.json` se realizará con `useEffect` en S25 de la programación. La navegación al detalle se incorporará en las etapas de React Router. El objetivo sigue siendo migrar toda Explorer App.
 
 ## Versión anterior
 
