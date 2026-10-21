@@ -7,7 +7,7 @@ interface BadgeProps {
 
 export function Badge({ region }: BadgeProps): JSX.Element {
   return (
-    <span className="inline-flex rounded-full bg-teal-500 px-3 py-1 text-sm font-semibold text-white">
+    <span className="text-inherit">
       {region}
     </span>
   );
