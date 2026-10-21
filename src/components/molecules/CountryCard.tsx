@@ -1,42 +1,32 @@
-import type { JSX, SyntheticEvent } from "react";
-import type { Country } from "../types/country";
+// CountryCard.tsx — compone la tarjeta y comunica una selección.
+import type { JSX } from "react";
+import type { Country } from "../../types/country";
 import {
   formatPopulation,
   getCapital,
   getFlagDescription,
-} from "../utils/format";
+} from "../../utils/format";
+import { Badge } from "../atoms/Badge";
+import { Flag } from "../atoms/Flag";
 
 interface CountryCardProps {
   country: Country;
+  onSelect: (code: string) => void;
 }
 
-// Evita repetir el cambio si también falla la imagen de respaldo.
-function handleFlagError(event: SyntheticEvent<HTMLImageElement>): void {
-  const image: HTMLImageElement = event.currentTarget;
-  if (image.dataset.fallbackApplied === "true") return;
-  image.dataset.fallbackApplied = "true";
-  image.src = `${import.meta.env.BASE_URL}placeholder.png`;
-}
-
-export function CountryCard({ country }: CountryCardProps): JSX.Element {
+export function CountryCard({
+  country,
+  onSelect,
+}: CountryCardProps): JSX.Element {
   const capital: string = getCapital(country);
   const flagDescription: string = getFlagDescription(country);
   const formattedPopulation: string = formatPopulation(country.population);
-  const flagUrl: string =
-    country.flag.url_svg || `${import.meta.env.BASE_URL}placeholder.png`;
 
   return (
     <article className="@container group flex w-full flex-col overflow-hidden rounded-lg bg-neutral-0 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-800">
       <div className="flex flex-col @min-[20rem]:flex-row">
-        <img
-          className="aspect-3/2 w-full shrink-0 object-cover @min-[20rem]:aspect-auto @min-[20rem]:w-2/5"
-          src={flagUrl}
-          alt={flagDescription}
-          loading="lazy"
-          onError={handleFlagError}
-        />
+        <Flag src={country.flag.url_svg} alt={flagDescription} />
         <div className="flex min-w-0 flex-1 flex-col p-5 @min-[20rem]:w-3/5">
-          {/* El contenido se obtiene de las props, sin construir un string HTML. */}
           <h2 className="text-(length:--font-country-name) font-bold text-neutral-900 dark:text-white">
             {country.names.common}
           </h2>
@@ -47,13 +37,21 @@ export function CountryCard({ country }: CountryCardProps): JSX.Element {
             </div>
             <div className="grid grid-cols-[84px_1fr] gap-3">
               <dt className="font-semibold">Región:</dt>
-              <dd>{country.region}</dd>
+              <dd><Badge region={country.region} /></dd>
             </div>
             <div className="grid grid-cols-[84px_1fr] gap-3">
               <dt className="font-semibold">Capital:</dt>
               <dd>{capital}</dd>
             </div>
           </dl>
+          {/* La selección comunica al padre el código del país. */}
+          <button
+            type="button"
+            className="mt-5 rounded-md bg-blue-500 px-4 py-2 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+            onClick={() => onSelect(country.codes.alpha_2)}
+          >
+            Ver más
+          </button>
         </div>
       </div>
     </article>
