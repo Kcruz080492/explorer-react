@@ -24,22 +24,22 @@ export function CountryCard({
 
   return (
     <article className="@container group flex w-full flex-col overflow-hidden rounded-lg bg-neutral-0 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
-      <div className="flex flex-row @min-[20rem]:flex-col">
+      <div className="flex flex-row md:flex-col @min-[20rem]:flex-col">
         <Flag src={country.flag.url_svg} alt={flagDescription} />
-        <div className="flex min-w-0 w-3/5 flex-1 flex-col p-5 @min-[20rem]:w-full">
+        <div className="flex min-w-0 w-3/5 flex-1 flex-col p-5 md:w-full @min-[20rem]:w-full">
           <h2 className="text-(length:--font-country-name) font-bold text-neutral-900">
             {country.names.common}
           </h2>
           <dl className="mt-4 space-y-3 text-base text-neutral-900">
-            <div className="grid grid-cols-1 gap-1 @min-[20rem]:grid-cols-[84px_1fr] @min-[20rem]:gap-3">
+            <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-3">
               <dt className="font-semibold">Población:</dt>
               <dd>{formattedPopulation}</dd>
             </div>
-            <div className="grid grid-cols-1 gap-1 @min-[20rem]:grid-cols-[84px_1fr] @min-[20rem]:gap-3">
+            <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-3">
               <dt className="font-semibold">Región:</dt>
               <dd><Badge region={country.region} /></dd>
             </div>
-            <div className="grid grid-cols-1 gap-1 @min-[20rem]:grid-cols-[84px_1fr] @min-[20rem]:gap-3">
+            <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-3">
               <dt className="font-semibold">Capital:</dt>
               <dd>{capital}</dd>
             </div>
