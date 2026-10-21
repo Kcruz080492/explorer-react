@@ -15,7 +15,7 @@ export function CountryGrid({
   return (
     <section
       aria-label="Listado de países"
-      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4"
     >
       {countries.map((country: Country): JSX.Element => (
         <CountryCard
