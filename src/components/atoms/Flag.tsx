@@ -21,7 +21,7 @@ export function Flag({ src, alt }: FlagProps): JSX.Element {
 
   return (
     <img
-      className="w-2/5 shrink-0 self-stretch object-cover @min-[20rem]:h-[218px] @min-[20rem]:w-full"
+      className="w-2/5 shrink-0 self-stretch object-cover md:h-54.5 md:w-full @min-[20rem]:h-[218px] @min-[20rem]:w-full"
       src={flagUrl}
       alt={alt}
       loading="lazy"
