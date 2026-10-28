@@ -6,7 +6,6 @@ import {
   getCapital,
   getFlagDescription,
 } from "../../utils/format";
-import { Badge } from "../atoms/Badge";
 import { Flag } from "../atoms/Flag";
 
 interface CountryCardProps {
@@ -21,6 +20,7 @@ export function CountryCard({
   const capital: string = getCapital(country);
   const flagDescription: string = getFlagDescription(country);
   const formattedPopulation: string = formatPopulation(country.population);
+  const code: string = country.codes.alpha_2;
 
   return (
     <article className="@container group flex w-full flex-col overflow-hidden rounded-lg bg-neutral-0 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
@@ -37,7 +37,7 @@ export function CountryCard({
             </div>
             <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-3">
               <dt className="font-semibold">Región:</dt>
-              <dd><Badge region={country.region} /></dd>
+              <dd>{country.region}</dd>
             </div>
             <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-3">
               <dt className="font-semibold">Capital:</dt>
@@ -45,6 +45,7 @@ export function CountryCard({
             </div>
           </dl>
           {/* La selección comunica al padre el código del país. */}
+           {code ? (
           <button
             type="button"
             className="mt-6 flex min-h-11 w-full items-center justify-center rounded-full bg-orange-500 px-5 py-2 text-lg font-medium text-neutral-900 transition-all duration-200 hover:bg-orange-600 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600 sm:w-32"
@@ -53,6 +54,11 @@ export function CountryCard({
           >
             Ver más
           </button>
+           ) :(
+             <p className="mt-6 text-sm text-neutral-600">
+              Detalle no disponible para este país.
+            </p>
+           )}
         </div>
       </div>
     </article>

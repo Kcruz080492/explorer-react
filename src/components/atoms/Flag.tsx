@@ -11,7 +11,9 @@ function handleFlagError(event: SyntheticEvent<HTMLImageElement>): void {
   const fallbackUrl: string = `${import.meta.env.BASE_URL}placeholder.png`;
 
   // Evita volver a asignar el respaldo si este también falla.
-  if (image.src === new URL(fallbackUrl, window.location.href).href) return;
+  if (image.src === new URL(fallbackUrl, window.location.href).href) {
+    return;
+  }
   image.src = fallbackUrl;
 }
 
@@ -21,7 +23,7 @@ export function Flag({ src, alt }: FlagProps): JSX.Element {
 
   return (
     <img
-      className="w-2/5 shrink-0 self-stretch object-cover md:h-54.5 md:w-full @min-[20rem]:h-[218px] @min-[20rem]:w-full"
+      className="aspect-3/2 w-full shrink-0 object-cover @min-[20rem]:aspect-auto @min-[20rem]:w-2/5"
       src={flagUrl}
       alt={alt}
       loading="lazy"
