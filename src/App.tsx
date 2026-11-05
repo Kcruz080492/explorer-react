@@ -1,5 +1,7 @@
 // App.tsx — integra navegación, búsqueda y filtrado de países.
-import { useEffect, useState } from "react";
+import { useCountries } from "./hooks/useCountries";
+import { useSearch } from "./hooks/useSearch";
+
 import type { ChangeEvent, JSX } from "react";
 
 import { SiteHeader } from "./components/organisms/SiteHeader";
@@ -7,71 +9,32 @@ import { Header } from "./components/organisms/Header";
 import { CountryGrid } from "./components/organisms/CountryGrid";
 import { LoadingState, EmptyState, ErrorState } from "./components/organisms/CountryStates";
 
-import { fetchCountries } from "./api/countries";
-import { filterCountries } from "./utils/filter";
 import type { Country } from "./types/country";
-import type { AppState } from "./utils/app-state";
 
-const INITIAL_VISIBLE_COUNTRIES: number = 8;
+// import type { AppState } from "./utils/app-state";
+// import { useEffect, useState } from "react";
+// import { fetchCountries } from "./api/countries";
+// import { filterCountries } from "./utils/filter";
 
 export default function App(): JSX.Element {
   // Conservan los criterios seleccionados por el usuario.
-  const [state, setState] = useState<AppState>({ status: "loading" });
 
-  const [query, setQuery] = useState<string>("");
-  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
-  const [region, setRegion] = useState<string>("");
-  const [retryCount, setRetryCount] = useState<number>(0);
+    // S26: Custom Hook para cargar países y gestionar reintentos.
+  const { state, retry } = useCountries();
 
-  useEffect(() => {
-    const controller = new AbortController();
-    let active: boolean = true;
+  // Mientras no existan datos cargados, usamos un arreglo vacío.
+  const countries: Country[] =
+    state.status === "success" ? state.data : [];
 
-    async function load(): Promise<void> {
-      setState({ status: "loading" });
-
-      try {
-        const countries: Country[] = await fetchCountries(
-          controller.signal,
-        );
-
-        if (active) {
-          setState({
-            status: "success",
-            data: countries,
-          });
-        }
-      } catch (error: unknown) {
-        if (!active || controller.signal.aborted) return;
-
-        console.error("Error al cargar los países:", error);
-
-        setState({
-          status: "error",
-          message:
-            "Verifica tu conexión e inténtalo nuevamente.",
-        });
-      }
-    }
-
-    void load();
-
-    // Cleanup: cancela la solicitud pendiente.
-    return () => {
-      active = false;
-      controller.abort();
-    };
-  }, [retryCount]);
-
-  // Espera 300 ms antes de aplicar la búsqueda.
-  useEffect(() => {
-    const timer: ReturnType<typeof setTimeout> = setTimeout(
-      () => setDebouncedQuery(query),
-      300,
-    );
-
-    return () => clearTimeout(timer);
-  }, [query]);
+  // S26: Custom Hook para búsqueda, debounce y región.
+  const {
+    query,
+    debouncedQuery,
+    region,
+    visibleCountries,
+    setQuery,
+    setRegion,
+  } = useSearch(countries);
 
   function handleQueryChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -86,7 +49,7 @@ export default function App(): JSX.Element {
   }
 
   function handleRetry(): void {
-    setRetryCount((previous: number) => previous + 1);
+    retry();
   }
 
   function handleSelect(code: string): void {
@@ -96,7 +59,7 @@ export default function App(): JSX.Element {
 
   let content: JSX.Element;
 
-  if (state.status === "loading") {
+if (state.status === "loading") {
     content = <LoadingState />;
   } else if (state.status === "error") {
     content = (
@@ -106,29 +69,17 @@ export default function App(): JSX.Element {
       />
     );
   } else {
-    const filtered: Country[] = filterCountries(
-      state.data,
-      debouncedQuery,
-      region,
+    //Los resultados ya fueron calculados por useSearch().
+    content = visibleCountries.length > 0 ? (
+      <CountryGrid
+        countries={visibleCountries}
+        onSelect={handleSelect}
+      />
+    ) : (
+      <EmptyState
+        query={debouncedQuery}
+      />
     );
-
-
-    const hasFilters: boolean =
-      debouncedQuery.trim() !== "" || region !== "";
-
-    const visibleCountries: Country[] = hasFilters
-      ? filtered
-      : filtered.slice(0, INITIAL_VISIBLE_COUNTRIES);
-
-    content =
-      visibleCountries.length > 0 ? (
-        <CountryGrid
-          countries={visibleCountries}
-          onSelect={handleSelect}
-        />
-      ) : (
-        <EmptyState query={debouncedQuery} />
-      );
   }
 
 
