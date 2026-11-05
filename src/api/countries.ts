@@ -8,6 +8,7 @@ async function requestCountries(
   signal?: AbortSignal,
 ): Promise<CountryDetail[]> {
   const response: Response = await fetch(
+    // `${import.meta.env.BASE_URL}data/paises-prueba-error.json`,
     `${import.meta.env.BASE_URL}data/countries.json`,
     { signal },
   );

@@ -89,11 +89,6 @@ export default function App(): JSX.Element {
     setRetryCount((previous: number) => previous + 1);
   }
 
-  // function handleClearFilters(): void {
-  //   setQuery("");
-  //   setRegion("");
-  // }
-
   function handleSelect(code: string): void {
     // El detalle se conectará cuando trabajemos el enrutamiento.
     console.log("País seleccionado:", code);
