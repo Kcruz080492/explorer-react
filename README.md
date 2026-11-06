@@ -12,18 +12,21 @@ Esta versión inicia la migración del proyecto Vanilla TypeScript a React media
 - Tailwind CSS v4.
 - pnpm.
 - Git y GitHub.
+- Datos de REST Countries almacenados en un archivo JSON local.
 
-## Avance actual: S26 en Canvas / S22 de la programación
+## Avance actual: S30 en Canvas
+La aplicación permite:
 
-La aplicación muestra tres países de ejemplo:
+- Consultar países a partir de una copia local de datos de REST Countries.
+- Mostrar **ocho países destacados** al iniciar, cuando no hay filtros activos.
+- Buscar países por nombre con **debounce de 300 ms**.
+- Filtrar países por región y combinar ambos criterios.
+- Mostrar estados de interfaz de **carga**, **error** y **sin resultados**, con opción de reintentar la carga.
+- Visualizar tarjetas adaptables con bandera, nombre, población, región y capital.
+- Utilizar navegación de secciones y menú móvil, con cierre mediante la tecla `Escape`.
 
-- El Salvador.
-- Japón.
-- Canadá.
+**Alcance pendiente:** el control «Ver más» todavía registra el código del país en la consola; la navegación al detalle con React Router aún no está integrada.
 
-Cada tarjeta presenta bandera, nombre, población, región y capital.
-
-`App` compone `Header` y `CountryGrid`. El grid recibe `Country[]`, crea las tarjetas con `map()` y utiliza `codes.alpha_2` como `key` estable. `CountryCard` combina `Flag` y `Badge`, y comunica la selección mediante una función prop tipada.
 
 ### Diseño de las tarjetas
 
@@ -92,29 +95,57 @@ pnpm preview
 | Archivo | Responsabilidad |
 | --- | --- |
 | `src/main.tsx` | Monta la aplicación React e importa los estilos globales. |
-| `src/App.tsx` | Compone Header y CountryGrid; proporciona los países y la función de selección. |
+| `src/App.tsx` |  Integra los Custom Hooks, los eventos de búsqueda y los componentes de interfaz. |
+| `src/hooks/useCountries.ts` | Carga países, administra estados de carga/error/éxito y permite reintentar. |
+| `src/hooks/useSearch.ts` | Administra búsqueda, región, debounce y países visibles. |
+| `src/api/countries.ts` | Lee el JSON local y proporciona funciones de consulta de países. |
+
 | `src/components/atoms/Flag.tsx` | Muestra la bandera y su respaldo. |
 | `src/components/atoms/Badge.tsx` | Muestra la región como texto. |
 | `src/components/molecules/CountryCard.tsx` | Compone la información de un país y su acción. |
 | `src/components/organisms/CountryGrid.tsx` | Renderiza la colección recibida con claves estables. |
+| `src/components/organisms/SiteHeader.tsx` | Barra superior, enlaces de sección y menú móvil. |
 | `src/components/organisms/Header.tsx` | Compone el título y contenido recibido mediante children. |
+| `src/components/organisms/CountryStates.tsx` | Componentes para carga, error y ausencia de resultados. |
 | `src/data/countries-demo.ts` | Contiene los tres países utilizados en esta práctica. |
 | `src/types/country.ts` | Define las interfaces de los datos de países. |
+| `src/types/country-detail.ts` | Define los datos para la consulta detallada. |
 | `src/utils/format.ts` | Formatea la población y obtiene la capital y la descripción de la bandera. |
+| `src/utils/filter.ts` | Filtra los países por nombre y región. |
+| `src/utils/app-state.ts` | Define los estados tipados de la carga. |
 | `src/index.css` | Integra Tailwind CSS y conserva los tokens de diseño. |
 | `public/placeholder.png` | Imagen de respaldo cuando una bandera no está disponible. |
+
+## Custom Hooks
+
+### `useCountries()`
+
+Centraliza la obtención de datos mediante `fetchCountries()`, utilizando `useEffect`, `useState` y `AbortController`. Devuelve:
+
+- `state`: estado discriminado `loading`, `success` o `error`.
+- `retry()`: función para volver a intentar la carga.
+
+### `useSearch(countries)`
+
+Recibe un arreglo `Country[]` y concentra el estado de la búsqueda y del selector de región. Aplica un debounce de **300 ms** y reutiliza `filterCountries()`.
+
+Devuelve `query`, `debouncedQuery`, `region`, `visibleCountries`, `setQuery` y `setRegion`.
+
+Cuando no existen filtros activos, limita la visualización a **ocho países**. Cuando el usuario busca o selecciona una región, muestra los resultados correspondientes.
+
+Esta separación permite que `App.tsx` coordine la interfaz sin implementar directamente la lógica de carga ni de filtrado.
 
 ## Fuente de datos
 
 En esta etapa se utilizan tres objetos locales definidos en:
 
-`src/data/countries-demo.ts`
+```text
+public/data/countries.json
+```
 
-Los registros proceden de la copia de datos de REST Countries utilizada en el proyecto Vanilla. Son datos estáticos y no se actualizan automáticamente.
+La lectura se realiza a través de `src/api/countries.ts`, utilizando `fetch` y `import.meta.env.BASE_URL`.
 
-La aplicación no realiza consultas al endpoint de países ni necesita una API key para esta práctica.
-
-Las banderas utilizan direcciones externas. Si una imagen falla, el componente intenta mostrar `public/placeholder.png`.
+**Importante:** la aplicación actual utiliza una copia local de REST Countries. No consulta la API externa en cada búsqueda ni necesita una API key para ejecutar esta versión. Los datos no se actualizan automáticamente.
 
 ## Alcance actual
 
