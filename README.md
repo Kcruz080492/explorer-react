@@ -24,8 +24,7 @@ La aplicación permite:
 - Mostrar estados de interfaz de **carga**, **error** y **sin resultados**, con opción de reintentar la carga.
 - Visualizar tarjetas adaptables con bandera, nombre, población, región y capital.
 - Utilizar navegación de secciones y menú móvil, con cierre mediante la tecla `Escape`.
-
-**Alcance pendiente:** el control «Ver más» todavía registra el código del país en la consola; la navegación al detalle con React Router aún no está integrada.
+- Abrir el detalle en `/country/:code`, con consulta local por código y enlaces a los países fronterizos.
 
 
 ### Diseño de las tarjetas
@@ -37,7 +36,7 @@ La aplicación permite:
 - El grid utiliza una, dos, tres o cuatro columnas según el breakpoint; desde `xl` utiliza cuatro.
 - Los tres registros son una comprobación temporal. Con cuatro columnas queda una posición libre.
 
-“Ver más” comprueba actualmente el callback mostrando el código en consola; la navegación al detalle se integrará con React Router. No se incorpora un interruptor de tema.
+“Ver más” abre la ruta de detalle del país seleccionado. No se incorpora un interruptor de tema.
 
 ## Requisitos
 
@@ -97,8 +96,10 @@ pnpm preview
 | `src/main.tsx` | Monta la aplicación React e importa los estilos globales. |
 | `src/App.tsx` |  Integra los Custom Hooks, los eventos de búsqueda y los componentes de interfaz. |
 | `src/hooks/useCountries.ts` | Carga países, administra estados de carga/error/éxito y permite reintentar. |
+| `src/hooks/useCountryDetail.ts` | Consulta el detalle por código de ruta y administra carga, error y reintento. |
 | `src/hooks/useSearch.ts` | Administra búsqueda, región, debounce y países visibles. |
 | `src/api/countries.ts` | Lee el JSON local y proporciona funciones de consulta de países. |
+| `src/utils/country-codes.ts` | Convierte códigos de frontera ISO alpha-3 a alpha-2 para las rutas. |
 
 | `src/components/atoms/Flag.tsx` | Muestra la bandera y su respaldo. |
 | `src/components/atoms/Badge.tsx` | Muestra la región como texto. |
@@ -107,7 +108,8 @@ pnpm preview
 | `src/components/organisms/SiteHeader.tsx` | Barra superior, enlaces de sección y menú móvil. |
 | `src/components/organisms/Header.tsx` | Compone el título y contenido recibido mediante children. |
 | `src/components/organisms/CountryStates.tsx` | Componentes para carga, error y ausencia de resultados. |
-| `src/data/countries-demo.ts` | Contiene los tres países utilizados en esta práctica. |
+| `src/pages/CountryDetailPage.tsx` | Presenta el detalle consultado y los enlaces a países fronterizos. |
+| `src/data/countries-demo.ts` | Conserva registros de demostración; la aplicación consulta el JSON local. |
 | `src/types/country.ts` | Define las interfaces de los datos de países. |
 | `src/types/country-detail.ts` | Define los datos para la consulta detallada. |
 | `src/utils/format.ts` | Formatea la población y obtiene la capital y la descripción de la bandera. |
@@ -135,9 +137,13 @@ Cuando no existen filtros activos, limita la visualización a **ocho países**. 
 
 Esta separación permite que `App.tsx` coordine la interfaz sin implementar directamente la lógica de carga ni de filtrado.
 
+### `useCountryDetail(code)`
+
+Normaliza el código de la ruta y consulta `fetchCountryByCode()`. Descarta resultados de una selección anterior, expone los estados de carga/error/éxito y permite reintentar.
+
 ## Fuente de datos
 
-En esta etapa se utilizan tres objetos locales definidos en:
+La aplicación utiliza registros locales definidos en:
 
 ```text
 public/data/countries.json
@@ -149,9 +155,7 @@ La lectura se realiza a través de `src/api/countries.ts`, utilizando `fetch` y 
 
 ## Alcance actual
 
-La S25 de Canvas / S21 de la programación configuró el proyecto y creó el primer componente. La S26 de Canvas / S22 de la programación organiza componentes y su composición.
-
-La búsqueda reactiva y los filtros se incorporarán al trabajar estado y formularios. La conexión de `api/countries.ts` con `public/data/countries.json` se realizará con `useEffect` en S25 de la programación. La navegación al detalle se incorporará en las etapas de React Router. El objetivo sigue siendo migrar toda Explorer App.
+La S25 de Canvas / S21 de la programación configuró el proyecto y creó el primer componente. Las sesiones posteriores incorporaron componentes, búsqueda, filtros y rutas de detalle. La aplicación conserva los datos en `public/data/countries.json` y no consulta una API externa durante la ejecución.
 
 ## Versión anterior
 
