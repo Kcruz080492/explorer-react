@@ -1,5 +1,6 @@
 // CountryCard.tsx — compone la tarjeta y comunica una selección.
 import type { JSX } from "react";
+import { Link } from "react-router-dom";
 import type { Country } from "../../types/country";
 import {
   formatPopulation,
@@ -24,11 +25,18 @@ export function CountryCard({
 
   return (
     <article className="@container group flex w-full flex-col overflow-hidden rounded-lg bg-neutral-0 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
-      <div className="flex flex-row md:flex-col @min-[20rem]:flex-col">
+      <div className="flex flex-col @min-[20rem]:flex-row">
         <Flag src={country.flag.url_svg} alt={flagDescription} />
-        <div className="flex min-w-0 w-3/5 flex-1 flex-col p-5 md:w-full @min-[20rem]:w-full">
+        <div className="flex min-w-0 flex-1 flex-col p-5 @min-[20rem]:w-3/5">
           <h2 className="text-(length:--font-country-name) font-bold text-neutral-900">
-            {country.names.common}
+            {code ? (
+              <Link
+                to={`/country/${encodeURIComponent(code)}`}
+                className="hover:text-blue-500 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+              >
+                {country.names.common}
+              </Link>
+            ) : country.names.common}
           </h2>
           <dl className="mt-4 space-y-3 text-base text-neutral-900">
             <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-3">

@@ -9,6 +9,7 @@ import { useSearch } from "../hooks/useSearch";
 import { SiteHeader } from "../components/organisms/SiteHeader";
 import { Header } from "../components/organisms/Header";
 import { CountryGrid } from "../components/organisms/CountryGrid";
+import { SiteFooter } from "../components/organisms/SiteFooter";
 
 import {
     LoadingState,
@@ -93,7 +94,7 @@ export default function HomePage(): JSX.Element {
 
 
     return (
-        <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900 dark:bg-slate-950 dark:text-white">
+        <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
             {/* Barra superior y menú móvil. */}
             <SiteHeader />
 
@@ -110,10 +111,8 @@ export default function HomePage(): JSX.Element {
 
                 <section
                     aria-label="Filtros de países"
-                    className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_16rem_auto] lg:items-end">
-
-
-                    <div className="relative">
+                    className="mb-12 flex flex-col gap-3 md:mb-16 md:flex-row md:items-center md:gap-4">
+                    <div className="relative flex-1">
                         <label
                             htmlFor="country-search"
                             className="sr-only"
@@ -159,10 +158,10 @@ export default function HomePage(): JSX.Element {
 
 
 
-                    <div>
+                    <div className="relative w-full md:w-54 md:shrink-0">
                         <label
                             htmlFor="region-filter"
-                            className="mb-2 block font-semibold">
+                            className="sr-only">
                             Filtrar por región
                         </label>
 
@@ -171,7 +170,7 @@ export default function HomePage(): JSX.Element {
                             name="region-filter"
                             value={region}
                             onChange={handleRegionChange}
-                            className="min-h-11 w-full rounded-sm border border-neutral-300 bg-white px-4 py-2 text-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                            className="h-12 w-full appearance-none rounded-full border border-teal-500 bg-neutral-0 py-2 pl-5 pr-12 text-base font-medium text-neutral-900 transition-colors duration-200 hover:border-blue-500 focus-visible:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 md:w-54 md:shrink-0"
                         >
                             <option value="">Todas las regiones</option>
                             <option value="Africa">África</option>
@@ -212,18 +211,7 @@ export default function HomePage(): JSX.Element {
             </main>
 
             {/* Destino del enlace Acerca de. */}
-            <footer
-                id="acerca-de"
-                className="mt-24 border-t border-neutral-300 bg-blue-500 text-neutral-0"
-            >
-                <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                    <p className="text-xs font-bold">Explorer App</p>
-
-                    <p className="mt-2 text-sm font-light text-neutral-50">
-                        © 2026 Explorer App. Datos proporcionados por REST Countries.
-                    </p>
-                </div>
-            </footer>
+            <SiteFooter />
         </div>
     );
 }
