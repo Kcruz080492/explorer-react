@@ -45,6 +45,7 @@ export function EmptyState({
     <section
       className="col-span-full rounded-xl border border-neutral-300 bg-neutral-0 px-6 py-12 text-center"
       role="status"
+      aria-live="polite"
     >
       <h2 className="text-xl font-bold text-neutral-900">
         No hay resultados

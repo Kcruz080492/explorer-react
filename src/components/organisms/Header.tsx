@@ -8,12 +8,12 @@ interface HeaderProps {
 
 export function Header({ title, children }: HeaderProps): JSX.Element {
   return (
-    <header className="mb-8">
-      <h1 className="text-(length:--font-page-title) font-semibold">
+    <header className="mb-8 md:mb-10">
+      <h1 className="max-w-2xl text-(length:--font-page-title) font-semibold leading-tight text-neutral-900">
         {title}
       </h1>
       {/* children es el contenido colocado entre las etiquetas Header. */}
-      <div className="mt-3 text-neutral-600 dark:text-slate-300">
+      <div className="mt-3 max-w-xl text-base leading-7 text-neutral-600">
         {children}
       </div>
     </header>

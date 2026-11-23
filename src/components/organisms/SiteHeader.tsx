@@ -1,8 +1,12 @@
 // SiteHeader.tsx — migra la navegación de la versión Vanilla.
 import { useEffect, useRef, useState } from "react";
 import type { JSX } from "react";
+import { useLocation } from "react-router-dom";
 
 export function SiteHeader(): JSX.Element {
+  const location = useLocation();
+  const sectionPrefix: string =
+    location.pathname === "/" ? "" : "/";
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   // Conserva la referencia del botón para devolverle el foco con Escape.
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -52,7 +56,7 @@ export function SiteHeader(): JSX.Element {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
         <div className="flex min-h-16 items-center justify-between md:min-h-20">
           <a
-            href="#inicio"
+            href={`${sectionPrefix}#inicio`}
             onClick={handleCloseMenu}
             className="whitespace-nowrap text-lg font-bold text-neutral-0 sm:text-xl lg:text-2xl"
           >
@@ -113,7 +117,7 @@ export function SiteHeader(): JSX.Element {
           <ul className="flex flex-col gap-1 text-sm md:flex-row md:items-center md:gap-5 lg:gap-6">
             <li>
               <a
-                href="#inicio"
+                href={`${sectionPrefix}#inicio`}
                 onClick={handleCloseMenu}
                 className="block border-l-4 border-orange-500 px-3 py-3 font-medium md:border-l-0 md:border-b-2 md:px-0 md:py-2"
                 aria-current="page"
@@ -123,7 +127,7 @@ export function SiteHeader(): JSX.Element {
             </li>
             <li>
               <a
-                href="#paises"
+                href={`${sectionPrefix}#paises`}
                 onClick={handleCloseMenu}
                 className="block rounded-md px-3 py-3 transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-orange-500 md:px-0 md:py-2 md:hover:bg-transparent md:hover:text-orange-500"
               >
@@ -132,7 +136,7 @@ export function SiteHeader(): JSX.Element {
             </li>
             <li>
               <a
-                href="#acerca-de"
+                href={`${sectionPrefix}#acerca-de`}
                 onClick={handleCloseMenu}
                 className="block rounded-md px-3 py-3 transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-orange-500 md:px-0 md:py-2 md:hover:bg-transparent md:hover:text-orange-500"
               >

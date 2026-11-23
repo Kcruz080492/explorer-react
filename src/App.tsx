@@ -21,7 +21,7 @@ export default function App(): JSX.Element {
       <Route
         path="*"
         element={
-          <main className="min-h-screen bg-neutral-50 px-4 py-12 text-neutral-900 dark:bg-slate-950 dark:text-white">
+          <main className="min-h-screen bg-neutral-50 px-4 py-12 text-neutral-900">
             <div className="mx-auto max-w-3xl">
               <h1 className="text-3xl font-bold">
                 Página no encontrada

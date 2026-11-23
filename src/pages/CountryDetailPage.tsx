@@ -5,6 +5,8 @@ import { useCountryDetail } from "../hooks/useCountryDetail";
 import type { CountryDetail } from "../types/country-detail";
 import { getCapital, getFlagDescription, formatPopulation } from "../utils/format";
 import { getCountryAlpha2 } from "../utils/country-codes";
+import { SiteHeader } from "../components/organisms/SiteHeader";
+import { SiteFooter } from "../components/organisms/SiteFooter";
 
 interface CountryFieldProps {
   label: string;
@@ -13,7 +15,7 @@ interface CountryFieldProps {
 
 function CountryField({ label, value }: CountryFieldProps): JSX.Element {
   return (
-    <div className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-1 text-sm leading-6">
+    <div className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-1 text-sm leading-7">
       <dt className="font-semibold">{label}:</dt>
       <dd className="break-words">{value}</dd>
     </div>
@@ -36,13 +38,14 @@ export default function CountryDetailPage(): JSX.Element {
 
   return (
     <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <SiteHeader />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         {/* El enlace absoluto también funciona al abrir directamente esta ruta. */}
         <Link
           to="/"
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-orange-500 px-6 py-2 font-semibold text-neutral-900 transition-colors hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
+          className="flex min-h-11 w-full items-center justify-center rounded-full bg-orange-500 px-5 py-2 text-lg font-medium text-neutral-900 transition-all duration-200 hover:bg-orange-600 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 sm:w-32"
         >
-          ← Atrás
+          <span aria-hidden="true">←</span>&nbsp; Atrás
         </Link>
 
         {state.status === "loading" ? (
@@ -75,14 +78,7 @@ export default function CountryDetailPage(): JSX.Element {
         )}
       </main>
 
-      <footer className="bg-blue-500 text-neutral-0">
-        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <p className="text-xs font-bold">Explorer App</p>
-          <p className="mt-2 text-sm font-light text-neutral-50">
-            © 2026 Explorer App. Datos proporcionados por REST Countries.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
@@ -110,7 +106,7 @@ function CountryDetails({ country }: CountryDetailsProps): JSX.Element {
   return (
     <section
       aria-labelledby="detail-title"
-      className="mt-10 grid items-center gap-8 md:mt-12 md:grid-cols-2 md:gap-12 lg:gap-14"
+      className="mt-12 grid items-center gap-10 lg:mt-16 lg:grid-cols-2 lg:gap-16"
     >
       <Flag
         src={country.flag.url_svg}
@@ -122,12 +118,12 @@ function CountryDetails({ country }: CountryDetailsProps): JSX.Element {
       <div className="min-w-0">
         <h1
           id="detail-title"
-          className="text-(length:--font-page-title) font-bold"
+          className="text-(length:--font-page-title) font-bold text-neutral-900 md:text-4xl"
         >
           {country.names.common}
         </h1>
 
-        <div className="mt-5 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+        <div className="mt-8 grid gap-8 text-sm leading-7 text-neutral-900 sm:grid-cols-2">
           <dl className="space-y-1">
             <CountryField label="Nombre nativo" value={getNativeName(country)} />
             <CountryField
@@ -142,19 +138,19 @@ function CountryDetails({ country }: CountryDetailsProps): JSX.Element {
             <CountryField label="Capital" value={getCapital(country)} />
           </dl>
 
-          <dl className="mt-1 space-y-1 sm:mt-0">
+          <dl className="mt-0 space-y-1">
             <CountryField label="Dominio" value={domains} />
             <CountryField label="Moneda" value={currencies} />
             <CountryField label="Idiomas" value={languages} />
           </dl>
         </div>
 
-        <div className="mt-8">
-          <h2 className="font-semibold">Países fronterizos:</h2>
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          <h2 className="font-semibold text-neutral-900">Países fronterizos:</h2>
           {borders.length === 0 ? (
-            <p className="mt-3 text-sm">Sin fronteras terrestres</p>
+            <p className="text-sm text-neutral-600">Sin fronteras terrestres</p>
           ) : (
-            <ul className="mt-3 flex flex-wrap gap-2">
+            <ul className="flex flex-wrap gap-2">
               {borders.map((borderCode: string) => {
                 const alpha2Code: string | undefined =
                   getCountryAlpha2(borderCode);
