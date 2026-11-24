@@ -2,19 +2,27 @@
 import type { JSX } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
+import { lazy, Suspense } from "react";
 import HomePage from "./pages/HomePage";
-import CountryDetailPage from "./pages/CountryDetailPage";
+import { RouteLoading } from "./components/RouteLoading";
+
+const CountryDetailPage = lazy(
+  () => import("./pages/CountryDetailPage"),
+);
 
 export default function App(): JSX.Element {
   return (
     <Routes>
       {/* Página principal: búsqueda, filtro y tarjetas. */}
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<HomePage/>} />
 
       {/* :code representa el código dinámico del país. */}
       <Route
         path="/country/:code"
-        element={<CountryDetailPage />}
+        element={<Suspense fallback = {<RouteLoading/>}>
+      <CountryDetailPage/>
+      </Suspense>
+        }
       />
 
       {/* Ruta de respaldo para direcciones no definidas. */}
@@ -33,7 +41,11 @@ export default function App(): JSX.Element {
 
               <Link
                 to="/"
-                className="mt-6 inline-flex min-h-11 items-center rounded-full bg-orange-500 px-5 py-2 font-semibold text-neutral-900 hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600"
+                className="mt-6 inline-flex min-h-11 items-center 
+                rounded-full bg-orange-500 px-5 py-2 font-semibold
+                text-neutral-900 hover:bg-orange-600 
+                focus-visible:outline-2 focus-visible:outline-offset-4
+                focus-visible:outline-blue-600"
               >
                 Volver al inicio
               </Link>
