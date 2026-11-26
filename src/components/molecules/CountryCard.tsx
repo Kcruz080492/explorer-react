@@ -12,11 +12,13 @@ import { Flag } from "../atoms/Flag";
 interface CountryCardProps {
   country: Country;
   onSelect: (code: string) => void;
+  isIniatiallyVisible?: boolean;
 }
 
 export function CountryCard({
   country,
   onSelect,
+  isIniatiallyVisible = false,
 }: CountryCardProps): JSX.Element {
   const capital: string = getCapital(country);
   const flagDescription: string = getFlagDescription(country);
@@ -26,7 +28,9 @@ export function CountryCard({
   return (
     <article className="@container group flex w-full flex-col overflow-hidden rounded-lg bg-neutral-0 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
       <div className="flex flex-col @min-[20rem]:flex-row">
-        <Flag src={country.flag.url_svg} alt={flagDescription} />
+        <Flag src={country.flag.url_svg} 
+        alt={flagDescription}  
+        loading={isIniatiallyVisible ? "eager" : "lazy"}/>
         <div className="flex min-w-0 flex-1 flex-col p-5 @min-[20rem]:w-3/5">
           <h2 className="text-(length:--font-country-name) font-bold text-neutral-900">
             {code ? (

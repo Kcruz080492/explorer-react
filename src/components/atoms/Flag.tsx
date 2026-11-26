@@ -6,11 +6,12 @@ interface FlagProps {
   alt: string;
   fit?: "cover" | "contain";
   className?: string;
+  loading?: "eager" | "lazy";
 }
 
 function handleFlagError(event: SyntheticEvent<HTMLImageElement>): void {
   const image: HTMLImageElement = event.currentTarget;
-  const fallbackUrl: string = `${import.meta.env.BASE_URL}placeholder.png`;
+  const fallbackUrl: string = `${import.meta.env.BASE_URL}placeholder.webp`;
 
   // Evita volver a asignar el respaldo si este también falla.
   if (image.src === new URL(fallbackUrl, window.location.href).href) {
@@ -24,9 +25,10 @@ export function Flag({
   alt,
   fit = "cover",
   className = "",
+  loading = "lazy",
 }: FlagProps): JSX.Element {
   const flagUrl: string =
-    src || `${import.meta.env.BASE_URL}placeholder.png`;
+    src || `${import.meta.env.BASE_URL}placeholder.webp`;
   const fitClassName: string =
     fit === "contain"
       ? "aspect-3/2 w-full shrink-0 object-contain"
@@ -37,7 +39,7 @@ export function Flag({
       className={`${fitClassName} ${className}`.trim()}
       src={flagUrl}
       alt={alt}
-      loading="lazy"
+      loading={loading}
       onError={handleFlagError}
     />
   );
